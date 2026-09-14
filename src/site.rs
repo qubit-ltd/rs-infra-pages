@@ -32,6 +32,15 @@ use crate::html::page;
 ///
 /// Returns an error when configuration cannot be read or parsed, the required README
 /// is missing, or a page or asset cannot be read or written.
+///
+/// # Parameters
+///
+/// * `project` - Project root containing configuration, README files, and assets.
+/// * `output` - Destination directory for the generated site.
+///
+/// # Returns
+///
+/// Returns `()` after all available pages and configured assets are written.
 pub fn build(project: &Path, output: &Path) -> Result<()> {
     let config = load(project)?;
     if config.languages.is_empty() {
@@ -85,6 +94,12 @@ pub fn build(project: &Path, output: &Path) -> Result<()> {
 /// # Errors
 ///
 /// Returns an error when an asset exists but cannot be read, created, or copied.
+///
+/// # Parameters
+///
+/// * `project` - Project root used to resolve configured asset paths.
+/// * `output` - Generated site directory receiving copied assets.
+/// * `config` - Configuration containing explicit and optional asset definitions.
 fn copy_assets(project: &Path, output: &Path, config: &Config) -> Result<()> {
     for asset in &config.assets {
         let source = project.join(asset);
@@ -126,6 +141,11 @@ fn copy_assets(project: &Path, output: &Path, config: &Config) -> Result<()> {
 ///
 /// Returns an error when the source cannot be read or the destination cannot be created
 /// or written.
+///
+/// # Parameters
+///
+/// * `source` - File or directory to copy recursively.
+/// * `destination` - Target file or directory path.
 fn copy_path(source: &Path, destination: &Path) -> Result<()> {
     if source.is_dir() {
         for entry in fs::read_dir(source)? {

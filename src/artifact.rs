@@ -24,6 +24,15 @@ use tar::Builder;
 /// The output directory must already exist and be a directory. Parent directories
 /// for the artifact are created as needed.
 ///
+/// # Parameters
+///
+/// * `output` - Directory containing the generated pages to archive.
+/// * `artifact` - Destination path for the compressed archive.
+///
+/// # Returns
+///
+/// Returns the destination path after the archive has been flushed and synchronized.
+///
 /// # Errors
 ///
 /// Returns an error when the pages directory is absent or not a directory, or when
@@ -50,6 +59,14 @@ pub fn create_artifact(output: &Path, artifact: &Path) -> Result<PathBuf> {
 
 /// Creates the default pages artifact in the current working directory.
 ///
+/// # Parameters
+///
+/// * `output` - Directory containing the generated pages to archive.
+///
+/// # Returns
+///
+/// Returns `()` after `pages-artifact.tar.gz` has been created and synchronized.
+///
 /// # Errors
 ///
 /// Returns the archive creation errors from [`create_artifact`].
@@ -58,6 +75,15 @@ pub fn publish_github_pages(output: &Path) -> Result<()> {
 }
 
 /// Creates a pages artifact at the requested path for GitHub Pages Actions.
+///
+/// # Parameters
+///
+/// * `output` - Directory containing the generated pages to archive.
+/// * `artifact` - Destination path for the compressed archive.
+///
+/// # Returns
+///
+/// Returns `()` after the archive has been created and synchronized.
 ///
 /// # Errors
 ///

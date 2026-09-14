@@ -54,6 +54,10 @@ enum Command {
 ///
 /// Returns an error when the project path cannot be canonicalized or the selected
 /// operation cannot complete.
+///
+/// # Returns
+///
+/// Returns `()` after the selected command completes successfully.
 fn main() -> Result<()> {
     let cli = Cli::parse();
     let project = std::fs::canonicalize(cli.project)?;
@@ -70,6 +74,16 @@ fn main() -> Result<()> {
 }
 
 /// Resolves a relative path from the project directory and preserves absolute paths.
+///
+/// # Parameters
+///
+/// * `project` - Base directory for relative paths.
+/// * `path` - Path to resolve.
+///
+/// # Returns
+///
+/// Returns an owned absolute path, preserving `path` unchanged when it is already
+/// absolute.
 fn resolve_from_project(project: &Path, path: &Path) -> PathBuf {
     if path.is_absolute() {
         path.to_owned()

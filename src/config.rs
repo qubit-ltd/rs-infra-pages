@@ -51,6 +51,15 @@ pub(crate) struct Config {
 ///
 /// Returns an error when a discovered configuration file cannot be read or contains
 /// invalid JSON.
+///
+/// # Parameters
+///
+/// * `project` - Project root containing the supported configuration files.
+///
+/// # Returns
+///
+/// Returns the parsed configuration, or the default bilingual configuration when
+/// no language definitions are provided.
 pub(crate) fn load(project: &Path) -> Result<Config> {
     let config_path = [
         project.join(".infra/ci/pages.json"),
