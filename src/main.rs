@@ -6,6 +6,8 @@
 //    Licensed under the Apache License, Version 2.0.
 // =============================================================================
 
+//! Provides the command-line interface for building and publishing project pages.
+
 use std::path::Path;
 use std::path::PathBuf;
 
