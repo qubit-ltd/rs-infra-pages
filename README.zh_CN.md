@@ -7,7 +7,8 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![English Document](https://img.shields.io/badge/Document-English-blue.svg)](README.md)
 
-构建简洁的双语项目站点，并通过 GitHub Pages artifact 发布。
+构建配置驱动的项目站点，并通过标准 artifact/deploy 接口交给 GitHub
+Pages。工具自身不依赖旧版 `rs-ci` 检出目录或 Node.js。
 
 ## 安装
 
@@ -17,17 +18,30 @@ cargo install --git https://github.com/qubit-ltd/rs-infra-pages.git --tag v0.1.0
 
 ## 快速开始
 
-在 Rust 项目根目录查看命令帮助：
+在 Rust 项目根目录构建、打包或准备部署：
 
 ```bash
 cargo run --manifest-path /path/to/rs-infra-pages/Cargo.toml -- --help
+cargo run --manifest-path /path/to/rs-infra-pages/Cargo.toml -- build
+cargo run --manifest-path /path/to/rs-infra-pages/Cargo.toml -- artifact
+cargo run --manifest-path /path/to/rs-infra-pages/Cargo.toml -- deploy
 ```
 
-项目的 `.infra` 配置仍然是行为的唯一来源；工具仓库不会复制项目配置。具体策略由项目配置决定。
+`build` 将配置的 README 渲染到 `public`；`artifact` 生成可移植的
+`pages-artifact.tar.gz`；`deploy` 生成相同 artifact 并输出供 GitHub Actions
+`actions/deploy-pages` 使用的交接提示。认证部署仍由 GitHub Pages action
+完成。
+
+主要配置文件是 `.infra/ci/pages.json`，迁移时也接受旧名称
+`.rs-ci-page.json`。没有配置时会构建 `README.md` 和存在时的
+`README.zh_CN.md`，并复制存在的 `assets/`、`target/llvm-cov/html/`、
+`coverage-badge.json`、`ci-summary.json`。配置支持 `site_title`、
+`default_language`、`languages`、`assets`、`coverage`、`coverage_badge` 和
+`metadata`；复制项格式为 `{ "source": "...", "output": "..." }`。
 
 ## 能力与限制
 
-当前版本只提供上文列出的专门能力，刻意保持为小型基础设施组件：项目策略放在 `.infra`，任务编排交给 `rs-infra-ci`。对于旧版 `rs-ci` 脚本，只有测试覆盖的命令可视为兼容。
+项目策略放在 `.infra`；任意 CI 系统都可以调用 `artifact` 或 `deploy`。
 
 ## 延伸阅读
 

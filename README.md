@@ -7,7 +7,9 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![中文文档](https://img.shields.io/badge/文档-中文版-blue.svg)](README.zh_CN.md)
 
-Build a small bilingual project site and publish it through GitHub Pages artifacts.
+Build a configurable project site and hand it to GitHub Pages through the
+standard artifact/deploy interface. The binary does not require the legacy
+`rs-ci` checkout or Node.js.
 
 ## Installation
 
@@ -21,13 +23,30 @@ From a Rust project root:
 
 ```bash
 cargo run --manifest-path /path/to/rs-infra-pages/Cargo.toml -- --help
+cargo run --manifest-path /path/to/rs-infra-pages/Cargo.toml -- build
+cargo run --manifest-path /path/to/rs-infra-pages/Cargo.toml -- artifact
+cargo run --manifest-path /path/to/rs-infra-pages/Cargo.toml -- deploy
 ```
 
-The project's `.infra` configuration remains the source of truth; this tool does not copy project configuration into the tool repository.
+`build` renders configured README pages into `public`. `artifact` creates a
+portable `pages-artifact.tar.gz`, and `deploy` creates the same artifact while
+printing the handoff expected by a GitHub Actions `actions/deploy-pages` job.
+The tool prepares the artifact; GitHub's Pages action performs authenticated
+deployment.
+
+The project's `.infra/ci/pages.json` is the primary configuration.
+`.rs-ci-page.json` is also accepted for migration. With no configuration, the
+tool builds `README.md` and an optional `README.zh_CN.md`, then copies these
+standard reports when present: `assets/`, `target/llvm-cov/html/`,
+`coverage-badge.json`, and `ci-summary.json`. Configuration can define
+`site_title`, `default_language`, `languages`, `assets`, `coverage`,
+`coverage_badge`, and `metadata`; copy entries use
+`{ "source": "...", "output": "..." }`.
 
 ## Capabilities and limitations
 
-This first release provides the focused behavior described above. It is intentionally a small building block: project-specific policy belongs in `.infra`, and orchestration belongs in `rs-infra-ci`. It does not promise compatibility with the legacy `rs-ci` scripts beyond the commands currently covered by tests.
+Project-specific policy belongs in `.infra`; orchestration can invoke the
+`artifact` or `deploy` command from any CI system.
 
 ## Learn More
 
