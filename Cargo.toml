@@ -1,0 +1,23 @@
+[package]
+name = "qubit-infra-pages"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+license = "Apache-2.0"
+description = "Static site builder and GitHub Pages publisher for Rust projects"
+repository = "https://github.com/qubit-ltd/rs-infra-pages"
+homepage = "https://qubit-ltd.github.io/rs-infra-pages/"
+readme = "README.md"
+
+[[bin]]
+name = "rs-infra-pages"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"
