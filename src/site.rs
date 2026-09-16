@@ -82,7 +82,6 @@ pub fn build(project: &Path, output: &Path) -> Result<()> {
         ));
     }
     copy_assets(project, &output, &config)?;
-    println!("Built site at {}", output.display());
     Ok(())
 }
 

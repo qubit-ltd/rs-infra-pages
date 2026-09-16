@@ -60,18 +60,54 @@ enum Command {
 /// # Returns
 ///
 /// Returns `()` after the selected command completes successfully.
-fn main() -> Result<()> {
+fn main() {
     let cli = Cli::parse();
+    let operation = command_name(&cli.command);
+    match execute(cli) {
+        Ok(message) => println!("rs-infra-pages: SUCCESS: {message}"),
+        Err(error) => {
+            eprintln!("rs-infra-pages: FAILURE ({operation}): {error:#}");
+            std::process::exit(1);
+        }
+    }
+}
+
+/// Executes one parsed command and returns its final user-facing summary.
+fn execute(cli: Cli) -> Result<String> {
     let project = std::fs::canonicalize(cli.project)?;
     match cli.command {
-        Command::Build => build(&project, &cli.output),
+        Command::Build => {
+            build(&project, &cli.output)?;
+            let output = resolve_from_project(&project, &cli.output);
+            Ok(format!("built site at {}", output.display()))
+        }
         Command::Artifact => {
-            create_artifact(&cli.output, &resolve_from_project(&project, &cli.artifact)).map(|_| ())
+            let artifact = resolve_from_project(&project, &cli.artifact);
+            create_artifact(&cli.output, &artifact)?;
+            Ok(format!("created artifact at {}", artifact.display()))
         }
         Command::Deploy => {
-            deploy_github_pages(&cli.output, &resolve_from_project(&project, &cli.artifact))
+            let artifact = resolve_from_project(&project, &cli.artifact);
+            deploy_github_pages(&cli.output, &artifact)?;
+            Ok(format!(
+                "prepared deploy artifact at {}",
+                artifact.display()
+            ))
         }
-        Command::PublishGithubPages => publish_github_pages(&cli.output),
+        Command::PublishGithubPages => {
+            publish_github_pages(&cli.output)?;
+            Ok("published pages-artifact.tar.gz".to_owned())
+        }
+    }
+}
+
+/// Returns the stable name used in failure summaries.
+fn command_name(command: &Command) -> &'static str {
+    match command {
+        Command::Build => "build",
+        Command::Artifact => "artifact",
+        Command::Deploy => "deploy",
+        Command::PublishGithubPages => "publish-github-pages",
     }
 }
 

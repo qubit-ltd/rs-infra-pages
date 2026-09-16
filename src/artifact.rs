@@ -53,7 +53,6 @@ pub fn create_artifact(output: &Path, artifact: &Path) -> Result<PathBuf> {
     archive.append_dir_all(".", &output)?;
     let encoder = archive.into_inner()?;
     encoder.finish()?.sync_all()?;
-    println!("Prepared GitHub Pages artifact at {}", artifact.display());
     Ok(artifact.to_owned())
 }
 
@@ -90,6 +89,5 @@ pub fn publish_github_pages(output: &Path) -> Result<()> {
 /// Returns the archive creation errors from [`create_artifact`].
 pub fn deploy_github_pages(output: &Path, artifact: &Path) -> Result<()> {
     create_artifact(output, artifact)?;
-    println!("GitHub Pages deploy artifact is ready for actions/deploy-pages");
     Ok(())
 }
