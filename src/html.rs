@@ -10,13 +10,14 @@
 
 /// Converts headings and paragraphs from the supported Markdown subset to HTML.
 ///
-/// The `title` argument is retained for the renderer interface but is not emitted by
-/// this conversion step. Text is escaped before the limited inline markup is applied.
+/// The `title` argument is retained for the renderer interface but is not
+/// emitted by this conversion step. Text is escaped before the limited inline
+/// markup is applied.
 ///
 /// # Parameters
 ///
-/// * `markdown` - Markdown text containing headings, paragraphs, and supported inline
-///   markers.
+/// * `markdown` - Markdown text containing headings, paragraphs, and supported
+///   inline markers.
 /// * `title` - Renderer title retained for the interface but not emitted.
 ///
 /// # Returns
@@ -50,9 +51,7 @@ pub(crate) fn markdown_to_html(markdown: &str, title: &str) -> String {
 ///
 /// Returns HTML with supported strong and code markers replaced by tags.
 fn inline(value: &str) -> String {
-    html_text(value)
-        .replace("**", "<strong>")
-        .replace('`', "<code>")
+    html_text(value).replace("**", "<strong>").replace('`', "<code>")
 }
 
 /// Escapes text characters that have HTML significance.
@@ -65,10 +64,7 @@ fn inline(value: &str) -> String {
 ///
 /// Returns text with ampersands and angle brackets replaced by HTML entities.
 pub(crate) fn html_text(value: &str) -> String {
-    value
-        .replace('&', "&amp;")
-        .replace('<', "&lt;")
-        .replace('>', "&gt;")
+    value.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
 }
 
 /// Escapes text for safe use inside an HTML attribute.
@@ -90,7 +86,8 @@ pub(crate) fn html_attr(value: &str) -> String {
 ///
 /// * `title` - Document title inserted into the escaped `<title>` element.
 /// * `body` - Rendered HTML fragment inserted into the document body.
-/// * `links` - Already-rendered navigation links inserted into the document nav.
+/// * `links` - Already-rendered navigation links inserted into the document
+///   nav.
 ///
 /// # Returns
 ///

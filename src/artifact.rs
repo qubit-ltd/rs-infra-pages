@@ -21,8 +21,8 @@ use tar::Builder;
 
 /// Archives the generated pages directory as a gzip-compressed tar artifact.
 ///
-/// The output directory must already exist and be a directory. Parent directories
-/// for the artifact are created as needed.
+/// The output directory must already exist and be a directory. Parent
+/// directories for the artifact are created as needed.
 ///
 /// # Parameters
 ///
@@ -31,16 +31,15 @@ use tar::Builder;
 ///
 /// # Returns
 ///
-/// Returns the destination path after the archive has been flushed and synchronized.
+/// Returns the destination path after the archive has been flushed and
+/// synchronized.
 ///
 /// # Errors
 ///
-/// Returns an error when the pages directory is absent or not a directory, or when
-/// the archive cannot be created, populated, flushed, or synchronized.
+/// Returns an error when the pages directory is absent or not a directory, or
+/// when the archive cannot be created, populated, flushed, or synchronized.
 pub fn create_artifact(output: &Path, artifact: &Path) -> Result<PathBuf> {
-    let output = output
-        .canonicalize()
-        .context("pages output directory was not found")?;
+    let output = output.canonicalize().context("pages output directory was not found")?;
     if !output.is_dir() {
         bail!("pages output is not a directory: {}", output.display());
     }
@@ -64,7 +63,8 @@ pub fn create_artifact(output: &Path, artifact: &Path) -> Result<PathBuf> {
 ///
 /// # Returns
 ///
-/// Returns `()` after `pages-artifact.tar.gz` has been created and synchronized.
+/// Returns `()` after `pages-artifact.tar.gz` has been created and
+/// synchronized.
 ///
 /// # Errors
 ///

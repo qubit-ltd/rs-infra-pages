@@ -19,10 +19,7 @@ fn successful_build_prints_final_status() {
 
     let output = run(&[
         "--project",
-        project
-            .path()
-            .to_str()
-            .expect("project path should be UTF-8"),
+        project.path().to_str().expect("project path should be UTF-8"),
         "build",
     ]);
 
@@ -37,10 +34,7 @@ fn failed_artifact_prints_final_status() {
 
     let output = run(&[
         "--project",
-        project
-            .path()
-            .to_str()
-            .expect("project path should be UTF-8"),
+        project.path().to_str().expect("project path should be UTF-8"),
         "artifact",
     ]);
 

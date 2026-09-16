@@ -24,18 +24,20 @@ use crate::html::page;
 
 /// Builds localized HTML pages and copies configured project assets.
 ///
-/// The output path is resolved relative to `project` unless it is absolute. Existing
-/// output is removed before rendering. The default language README must exist; other
-/// missing language files are skipped. Filesystem and configuration errors are returned.
+/// The output path is resolved relative to `project` unless it is absolute.
+/// Existing output is removed before rendering. The default language README
+/// must exist; other missing language files are skipped. Filesystem and
+/// configuration errors are returned.
 ///
 /// # Errors
 ///
-/// Returns an error when configuration cannot be read or parsed, the required README
-/// is missing, or a page or asset cannot be read or written.
+/// Returns an error when configuration cannot be read or parsed, the required
+/// README is missing, or a page or asset cannot be read or written.
 ///
 /// # Parameters
 ///
-/// * `project` - Project root containing configuration, README files, and assets.
+/// * `project` - Project root containing configuration, README files, and
+///   assets.
 /// * `output` - Destination directory for the generated site.
 ///
 /// # Returns
@@ -52,8 +54,7 @@ pub fn build(project: &Path, output: &Path) -> Result<()> {
         project.join(output)
     };
     if output.exists() {
-        fs::remove_dir_all(&output)
-            .with_context(|| format!("failed to clean pages output {}", output.display()))?;
+        fs::remove_dir_all(&output).with_context(|| format!("failed to clean pages output {}", output.display()))?;
     }
     fs::create_dir_all(&output)?;
     let mut links = String::new();
@@ -61,10 +62,7 @@ pub fn build(project: &Path, output: &Path) -> Result<()> {
         let source = project.join(&definition.readme);
         if !source.is_file() {
             if language == &config.default_language {
-                bail!(
-                    "README for language {language} was not found: {}",
-                    source.display()
-                );
+                bail!("README for language {language} was not found: {}", source.display());
             }
             continue;
         }
@@ -85,28 +83,28 @@ pub fn build(project: &Path, output: &Path) -> Result<()> {
     Ok(())
 }
 
-/// Copies explicitly configured and standard report assets into the generated site.
+/// Copies explicitly configured and standard report assets into the generated
+/// site.
 ///
-/// Missing optional assets are ignored. Filesystem errors from discovered assets are
-/// returned to the caller.
+/// Missing optional assets are ignored. Filesystem errors from discovered
+/// assets are returned to the caller.
 ///
 /// # Errors
 ///
-/// Returns an error when an asset exists but cannot be read, created, or copied.
+/// Returns an error when an asset exists but cannot be read, created, or
+/// copied.
 ///
 /// # Parameters
 ///
 /// * `project` - Project root used to resolve configured asset paths.
 /// * `output` - Generated site directory receiving copied assets.
-/// * `config` - Configuration containing explicit and optional asset definitions.
+/// * `config` - Configuration containing explicit and optional asset
+///   definitions.
 fn copy_assets(project: &Path, output: &Path, config: &Config) -> Result<()> {
     for asset in &config.assets {
         let source = project.join(asset);
         if source.exists() {
-            copy_path(
-                &source,
-                &output.join(Path::new(asset).file_name().unwrap_or_default()),
-            )?;
+            copy_path(&source, &output.join(Path::new(asset).file_name().unwrap_or_default()))?;
         }
     }
     let defaults = [
@@ -138,8 +136,8 @@ fn copy_assets(project: &Path, output: &Path, config: &Config) -> Result<()> {
 ///
 /// # Errors
 ///
-/// Returns an error when the source cannot be read or the destination cannot be created
-/// or written.
+/// Returns an error when the source cannot be read or the destination cannot be
+/// created or written.
 ///
 /// # Parameters
 ///

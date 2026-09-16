@@ -16,13 +16,9 @@ use tempfile::tempdir;
 #[test]
 fn test_builds_default_bilingual_site() {
     let project = tempdir().expect("temporary project directory should be created");
-    fs::write(project.path().join("README.md"), "# Hello\n\nRust project.")
-        .expect("English README should be written");
-    fs::write(
-        project.path().join("README.zh_CN.md"),
-        "# 你好\n\nRust 项目。",
-    )
-    .expect("Chinese README should be written");
+    fs::write(project.path().join("README.md"), "# Hello\n\nRust project.").expect("English README should be written");
+    fs::write(project.path().join("README.zh_CN.md"), "# 你好\n\nRust 项目。")
+        .expect("Chinese README should be written");
 
     let output = project.path().join("public");
     build(project.path(), &output).expect("default site should be built");
@@ -34,8 +30,7 @@ fn test_builds_default_bilingual_site() {
 #[test]
 fn test_builds_configured_assets_and_optional_reports() {
     let project = tempdir().expect("temporary project directory should be created");
-    fs::create_dir_all(project.path().join(".infra/ci"))
-        .expect("configuration directory should be created");
+    fs::create_dir_all(project.path().join(".infra/ci")).expect("configuration directory should be created");
     fs::write(project.path().join("README.md"), "# Hello").expect("README should be written");
     fs::create_dir(project.path().join("assets")).expect("asset directory should be created");
     fs::write(project.path().join("assets/site.css"), "body {}").expect("asset should be written");
@@ -51,8 +46,7 @@ fn test_builds_configured_assets_and_optional_reports() {
 
     assert!(output.join("assets/site.css").is_file());
     assert_eq!(
-        fs::read_to_string(output.join("ci-summary.json"))
-            .expect("copied metadata should be readable"),
+        fs::read_to_string(output.join("ci-summary.json")).expect("copied metadata should be readable"),
         "{}\n"
     );
 }

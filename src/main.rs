@@ -6,7 +6,8 @@
 //    Licensed under the Apache License, Version 2.0.
 // =============================================================================
 
-//! Provides the command-line interface for building and publishing project pages.
+//! Provides the command-line interface for building and publishing project
+//! pages.
 
 use std::path::Path;
 use std::path::PathBuf;
@@ -54,8 +55,8 @@ enum Command {
 ///
 /// # Errors
 ///
-/// Returns an error when the project path cannot be canonicalized or the selected
-/// operation cannot complete.
+/// Returns an error when the project path cannot be canonicalized or the
+/// selected operation cannot complete.
 ///
 /// # Returns
 ///
@@ -89,10 +90,7 @@ fn execute(cli: Cli) -> Result<String> {
         Command::Deploy => {
             let artifact = resolve_from_project(&project, &cli.artifact);
             deploy_github_pages(&cli.output, &artifact)?;
-            Ok(format!(
-                "prepared deploy artifact at {}",
-                artifact.display()
-            ))
+            Ok(format!("prepared deploy artifact at {}", artifact.display()))
         }
         Command::PublishGithubPages => {
             publish_github_pages(&cli.output)?;
@@ -111,7 +109,8 @@ fn command_name(command: &Command) -> &'static str {
     }
 }
 
-/// Resolves a relative path from the project directory and preserves absolute paths.
+/// Resolves a relative path from the project directory and preserves absolute
+/// paths.
 ///
 /// # Parameters
 ///
@@ -120,8 +119,8 @@ fn command_name(command: &Command) -> &'static str {
 ///
 /// # Returns
 ///
-/// Returns an owned absolute path, preserving `path` unchanged when it is already
-/// absolute.
+/// Returns an owned absolute path, preserving `path` unchanged when it is
+/// already absolute.
 fn resolve_from_project(project: &Path, path: &Path) -> PathBuf {
     if path.is_absolute() {
         path.to_owned()
