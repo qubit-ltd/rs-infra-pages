@@ -65,9 +65,9 @@ fn main() {
     let cli = Cli::parse();
     let operation = command_name(&cli.command);
     match execute(cli) {
-        Ok(message) => println!("rs-infra-pages: SUCCESS: {message}"),
+        Ok(message) => println!("✅ rs-infra-pages: SUCCESS: {message}"),
         Err(error) => {
-            eprintln!("rs-infra-pages: FAILURE ({operation}): {error:#}");
+            eprintln!("❌ rs-infra-pages: FAILURE ({operation}): {error:#}");
             std::process::exit(1);
         }
     }

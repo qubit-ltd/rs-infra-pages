@@ -25,7 +25,7 @@ fn successful_build_prints_final_status() {
 
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
-    assert!(stdout.contains("rs-infra-pages: SUCCESS: built site at"));
+    assert!(stdout.starts_with("✅ rs-infra-pages: SUCCESS: built site at"));
 }
 
 #[test]
@@ -40,5 +40,5 @@ fn failed_artifact_prints_final_status() {
 
     assert!(!output.status.success());
     let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(stderr.contains("rs-infra-pages: FAILURE (artifact):"));
+    assert!(stderr.starts_with("❌ rs-infra-pages: FAILURE (artifact):"));
 }
