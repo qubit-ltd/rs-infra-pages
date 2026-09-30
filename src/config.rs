@@ -44,7 +44,7 @@ pub(crate) struct Config {
 /// Loads the first available supported configuration file or the default
 /// configuration.
 ///
-/// The primary `.infra/ci/pages.json` file takes precedence over the legacy
+/// The primary `.infra/pages/pages.json` file takes precedence over the legacy
 /// `.rs-ci-page.json` file. When neither file exists, English and optional
 /// Chinese README definitions are supplied as defaults.
 ///
@@ -62,9 +62,12 @@ pub(crate) struct Config {
 /// Returns the parsed configuration, or the default bilingual configuration
 /// when no language definitions are provided.
 pub(crate) fn load(project: &Path) -> Result<Config> {
-    let config_path = [project.join(".infra/ci/pages.json"), project.join(".rs-ci-page.json")]
-        .into_iter()
-        .find(|path| path.is_file());
+    let config_path = [
+        project.join(".infra/pages/pages.json"),
+        project.join(".rs-ci-page.json"),
+    ]
+    .into_iter()
+    .find(|path| path.is_file());
     let mut config: Config = config_path
         .map(fs::read_to_string)
         .transpose()?

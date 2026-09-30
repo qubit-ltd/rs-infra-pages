@@ -34,7 +34,7 @@ printing the handoff expected by a GitHub Actions `actions/deploy-pages` job.
 The tool prepares the artifact; GitHub's Pages action performs authenticated
 deployment.
 
-The project's `.infra/ci/pages.json` is the primary configuration.
+The project's `.infra/pages/pages.json` is the primary configuration.
 `.rs-ci-page.json` is also accepted for migration. With no configuration, the
 tool builds `README.md` and an optional `README.zh_CN.md`, then copies these
 standard reports when present: `assets/`, `target/llvm-cov/html/`,

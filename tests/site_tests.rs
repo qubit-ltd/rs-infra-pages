@@ -30,13 +30,13 @@ fn test_builds_default_bilingual_site() {
 #[test]
 fn test_builds_configured_assets_and_optional_reports() {
     let project = tempdir().expect("temporary project directory should be created");
-    fs::create_dir_all(project.path().join(".infra/ci")).expect("configuration directory should be created");
+    fs::create_dir_all(project.path().join(".infra/pages")).expect("pages configuration directory should be created");
     fs::write(project.path().join("README.md"), "# Hello").expect("README should be written");
     fs::create_dir(project.path().join("assets")).expect("asset directory should be created");
     fs::write(project.path().join("assets/site.css"), "body {}").expect("asset should be written");
     fs::write(project.path().join("ci-summary.json"), "{}\n").expect("metadata should be written");
     fs::write(
-        project.path().join(".infra/ci/pages.json"),
+        project.path().join(".infra/pages/pages.json"),
         r#"{"languages":{"en":{"readme":"README.md","output":"index.html","label":"English"}},"assets":["assets"],"metadata":{"source":"ci-summary.json","output":"ci-summary.json"}}"#,
     )
     .expect("configuration should be written");

@@ -32,7 +32,7 @@ cargo run --manifest-path /path/to/rs-infra-pages/Cargo.toml -- deploy
 `actions/deploy-pages` 使用的交接提示。认证部署仍由 GitHub Pages action
 完成。
 
-主要配置文件是 `.infra/ci/pages.json`，迁移时也接受旧名称
+主要配置文件是 `.infra/pages/pages.json`，迁移时也接受旧名称
 `.rs-ci-page.json`。没有配置时会构建 `README.md` 和存在时的
 `README.zh_CN.md`，并复制存在的 `assets/`、`target/llvm-cov/html/`、
 `coverage-badge.json`、`ci-summary.json`。配置支持 `site_title`、
