@@ -83,17 +83,20 @@ fn execute(cli: Cli) -> Result<String> {
             Ok(format!("built site at {}", output.display()))
         }
         Command::Artifact => {
+            let output = resolve_from_project(&project, &cli.output);
             let artifact = resolve_from_project(&project, &cli.artifact);
-            create_artifact(&cli.output, &artifact)?;
+            create_artifact(&output, &artifact)?;
             Ok(format!("created artifact at {}", artifact.display()))
         }
         Command::Deploy => {
+            let output = resolve_from_project(&project, &cli.output);
             let artifact = resolve_from_project(&project, &cli.artifact);
-            deploy_github_pages(&cli.output, &artifact)?;
+            deploy_github_pages(&output, &artifact)?;
             Ok(format!("prepared deploy artifact at {}", artifact.display()))
         }
         Command::PublishGithubPages => {
-            publish_github_pages(&cli.output)?;
+            let output = resolve_from_project(&project, &cli.output);
+            publish_github_pages(&output)?;
             Ok("published pages-artifact.tar.gz".to_owned())
         }
     }
@@ -126,5 +129,78 @@ fn resolve_from_project(project: &Path, path: &Path) -> PathBuf {
         path.to_owned()
     } else {
         project.join(path)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::fs;
+
+    use clap::Parser;
+    use tempfile::tempdir;
+
+    use super::Cli;
+    use super::execute;
+
+    #[test]
+    fn execute_builds_and_archives_using_project_relative_paths() {
+        let project = tempdir().expect("temporary project directory should be created");
+        fs::write(project.path().join("README.md"), "# Pages").expect("README should be written");
+        let project_path = project.path().to_str().expect("project path should be UTF-8");
+
+        let build = Cli::try_parse_from(["rs-infra-pages", "--project", project_path, "build"])
+            .expect("build command should parse");
+        assert!(execute(build).expect("site should build").starts_with("built site at "));
+
+        let artifact = Cli::try_parse_from([
+            "rs-infra-pages",
+            "--project",
+            project_path,
+            "--output",
+            "public",
+            "--artifact",
+            "artifacts/site.tar.gz",
+            "artifact",
+        ])
+        .expect("artifact command should parse");
+        assert!(
+            execute(artifact)
+                .expect("artifact should be created")
+                .starts_with("created artifact at ")
+        );
+        assert!(project.path().join("artifacts/site.tar.gz").is_file());
+
+        let deploy = Cli::try_parse_from([
+            "rs-infra-pages",
+            "--project",
+            project_path,
+            "--output",
+            "public",
+            "--artifact",
+            "artifacts/deploy.tar.gz",
+            "deploy",
+        ])
+        .expect("deploy command should parse");
+        assert!(
+            execute(deploy)
+                .expect("deploy artifact should be created")
+                .starts_with("prepared deploy artifact at ")
+        );
+        assert!(project.path().join("artifacts/deploy.tar.gz").is_file());
+    }
+
+    #[test]
+    fn execute_returns_an_error_for_a_missing_project() {
+        let project = tempdir().expect("temporary project directory should be created");
+        let missing = project.path().join("missing");
+        let cli = Cli::try_parse_from([
+            "rs-infra-pages",
+            "--project",
+            missing.to_str().expect("project path should be UTF-8"),
+            "build",
+        ])
+        .expect("build command should parse");
+
+        assert!(execute(cli).is_err());
     }
 }
