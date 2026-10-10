@@ -46,7 +46,7 @@ fn test_creates_github_pages_artifact_without_external_tools() {
 }
 
 #[test]
-fn deploy_creates_artifact_at_the_requested_path() {
+fn test_deploy_creates_artifact_at_the_requested_path() {
     let project = tempdir().expect("temporary project directory should be created");
     let output = project.path().join("public");
     fs::create_dir(&output).expect("pages output directory should be created");
@@ -59,7 +59,7 @@ fn deploy_creates_artifact_at_the_requested_path() {
 }
 
 #[test]
-fn publish_creates_default_artifact_in_the_current_directory() {
+fn test_publish_creates_default_artifact_in_the_current_directory() {
     let _guard = CURRENT_DIR_LOCK
         .lock()
         .expect("current directory lock should not be poisoned");

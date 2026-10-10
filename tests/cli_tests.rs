@@ -21,7 +21,7 @@ fn run(args: &[&str]) -> std::process::Output {
 }
 
 #[test]
-fn successful_build_prints_final_status() {
+fn test_successful_build_prints_final_status() {
     let project = tempdir().expect("temporary project directory should be created");
     fs::write(project.path().join("README.md"), "# Hello").expect("README should be written");
 
@@ -37,7 +37,7 @@ fn successful_build_prints_final_status() {
 }
 
 #[test]
-fn failed_artifact_prints_final_status() {
+fn test_failed_artifact_prints_final_status() {
     let project = tempdir().expect("temporary project directory should be created");
 
     let output = run(&[

@@ -100,6 +100,10 @@ pub fn build(project: &Path, output: &Path) -> Result<()> {
 /// * `output` - Generated site directory receiving copied assets.
 /// * `config` - Configuration containing explicit and optional asset
 ///   definitions.
+///
+/// # Returns
+///
+/// Returns `()` after all discovered assets are copied.
 fn copy_assets(project: &Path, output: &Path, config: &Config) -> Result<()> {
     for asset in &config.assets {
         let source = project.join(asset);
@@ -143,6 +147,10 @@ fn copy_assets(project: &Path, output: &Path, config: &Config) -> Result<()> {
 ///
 /// * `source` - File or directory to copy recursively.
 /// * `destination` - Target file or directory path.
+///
+/// # Returns
+///
+/// Returns `()` after the source tree is copied to the destination.
 fn copy_path(source: &Path, destination: &Path) -> Result<()> {
     if source.is_dir() {
         for entry in fs::read_dir(source)? {

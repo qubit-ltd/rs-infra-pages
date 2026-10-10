@@ -11,8 +11,8 @@
 /// Converts headings and paragraphs from the supported Markdown subset to HTML.
 ///
 /// The `title` argument is retained for the renderer interface but is not
-/// emitted by this conversion step. Text is escaped before the limited inline
-/// markup is applied.
+/// emitted by this conversion step. Text is HTML-escaped before supported
+/// inline markers are replaced.
 ///
 /// # Parameters
 ///
@@ -23,6 +23,7 @@
 /// # Returns
 ///
 /// Returns the converted HTML fragment without a document wrapper.
+#[must_use]
 pub(crate) fn markdown_to_html(markdown: &str, title: &str) -> String {
     let mut html = String::new();
     for line in markdown.lines() {
@@ -45,11 +46,12 @@ pub(crate) fn markdown_to_html(markdown: &str, title: &str) -> String {
 ///
 /// # Parameters
 ///
-/// * `value` - Escaped inline text containing the supported marker characters.
+/// * `value` - Raw inline text containing supported marker characters.
 ///
 /// # Returns
 ///
 /// Returns HTML with supported strong and code markers replaced by tags.
+#[must_use]
 fn inline(value: &str) -> String {
     html_text(value).replace("**", "<strong>").replace('`', "<code>")
 }
@@ -63,6 +65,7 @@ fn inline(value: &str) -> String {
 /// # Returns
 ///
 /// Returns text with ampersands and angle brackets replaced by HTML entities.
+#[must_use]
 pub(crate) fn html_text(value: &str) -> String {
     value.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
 }
@@ -76,6 +79,7 @@ pub(crate) fn html_text(value: &str) -> String {
 /// # Returns
 ///
 /// Returns text escaped for HTML text and double-quoted attribute contexts.
+#[must_use]
 pub(crate) fn html_attr(value: &str) -> String {
     html_text(value).replace('"', "&quot;")
 }
@@ -92,6 +96,7 @@ pub(crate) fn html_attr(value: &str) -> String {
 /// # Returns
 ///
 /// Returns a complete standalone HTML document.
+#[must_use]
 pub(crate) fn page(title: &str, body: &str, links: &str) -> String {
     format!(
         "<!doctype html><html><head><meta charset=\"utf-8\"><title>{}</title><style>body{{max-width:960px;margin:2rem auto;padding:0 1rem;font:16px system-ui;line-height:1.6}}code{{background:#eef;padding:.1rem .3rem}}</style></head><body><nav>{}</nav>{}</body></html>\n",

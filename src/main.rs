@@ -51,16 +51,10 @@ enum Command {
     PublishGithubPages,
 }
 
-/// Parses command-line arguments and executes the selected operation.
+/// Parses command-line arguments, executes the selected operation, and reports
+/// its outcome to the user.
 ///
-/// # Errors
-///
-/// Returns an error when the project path cannot be canonicalized or the
-/// selected operation cannot complete.
-///
-/// # Returns
-///
-/// Returns `()` after the selected command completes successfully.
+/// Exits with status code 1 when the selected operation fails.
 fn main() {
     let cli = Cli::parse();
     let operation = command_name(&cli.command);
@@ -74,6 +68,19 @@ fn main() {
 }
 
 /// Executes one parsed command and returns its final user-facing summary.
+///
+/// # Parameters
+///
+/// * `cli` - Parsed command-line options and the operation to execute.
+///
+/// # Returns
+///
+/// Returns a summary of the completed operation.
+///
+/// # Errors
+///
+/// Returns an error if the project directory cannot be canonicalized or the
+/// selected operation fails.
 fn execute(cli: Cli) -> Result<String> {
     let project = std::fs::canonicalize(cli.project)?;
     match cli.command {
@@ -102,7 +109,15 @@ fn execute(cli: Cli) -> Result<String> {
     }
 }
 
-/// Returns the stable name used in failure summaries.
+/// Returns the stable command name used in failure summaries.
+///
+/// # Parameters
+///
+/// * `command` - Selected command whose display name is needed.
+///
+/// # Returns
+///
+/// Returns the command's stable kebab-case name.
 fn command_name(command: &Command) -> &'static str {
     match command {
         Command::Build => "build",
@@ -124,6 +139,10 @@ fn command_name(command: &Command) -> &'static str {
 ///
 /// Returns an owned absolute path, preserving `path` unchanged when it is
 /// already absolute.
+///
+/// # Errors
+///
+/// This function does not perform I/O and cannot fail.
 fn resolve_from_project(project: &Path, path: &Path) -> PathBuf {
     if path.is_absolute() {
         path.to_owned()

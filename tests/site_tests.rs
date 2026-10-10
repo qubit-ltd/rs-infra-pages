@@ -37,7 +37,10 @@ fn test_builds_configured_assets_and_optional_reports() {
     fs::write(project.path().join("ci-summary.json"), "{}\n").expect("metadata should be written");
     fs::write(
         project.path().join(".infra/pages/pages.json"),
-        r#"{"languages":{"en":{"readme":"README.md","output":"index.html","label":"English"}},"assets":["assets"],"metadata":{"source":"ci-summary.json","output":"ci-summary.json"}}"#,
+        concat!(
+            r#"{"languages":{"en":{"readme":"README.md","output":"index.html","label":"English"}},"#,
+            r#""assets":["assets"],"metadata":{"source":"ci-summary.json","output":"ci-summary.json"}}"#,
+        ),
     )
     .expect("configuration should be written");
 
